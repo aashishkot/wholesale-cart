@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, ScanEye, ShoppingCart } from "lucide-react";
@@ -7,9 +5,15 @@ import { useCart } from "./CartProvider";
 import { useWishlist } from "./WishlistProvider";
 import { Product } from "@/app/services/api";
 
-export default function ProductCard({ id, name, price, image }: Product) {
+interface ProductCardProps {
+  product: Product; // Ensure you're using a prop that contains Product data
+}
+
+export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
   const { addToWishlist, wishlistItems } = useWishlist();
+
+  const { id, name, price, image } = product; // Destructure the product prop
 
   const isInWishlist = wishlistItems.some((item) => item.id === id);
 
