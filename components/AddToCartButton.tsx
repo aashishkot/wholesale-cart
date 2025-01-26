@@ -1,7 +1,7 @@
 'use client'
 
 import { useCart } from './CartProvider'
-import { Product } from '../services/api'
+import { Product } from "@/app/services/api";
 
 export default function AddToCartButton({ product }: { product: Product }) {
   const { addToCart } = useCart()

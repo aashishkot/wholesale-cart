@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { Product } from '../services/api'
+import { Product } from "@/app/services/api";
 
 interface WishlistContextType {
   wishlistItems: Product[];

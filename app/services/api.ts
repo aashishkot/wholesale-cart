@@ -1,3 +1,11 @@
+interface ApiProduct {
+  id: number; // Assuming `id` is a number in the API response
+  title: string;
+  price: number;
+  image: string;
+  description: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -11,8 +19,8 @@ export async function getProducts(): Promise<Product[]> {
   if (!response.ok) {
     throw new Error("Failed to fetch products");
   }
-  const data = await response.json();
-  return data.map((item: any) => ({
+  const data: ApiProduct[] = await response.json();
+  return data.map((item) => ({
     id: item.id.toString(),
     name: item.title,
     price: item.price,
@@ -26,7 +34,7 @@ export async function getProduct(id: string): Promise<Product | undefined> {
   if (!response.ok) {
     throw new Error("Failed to fetch product");
   }
-  const item = await response.json();
+  const item: ApiProduct = await response.json();
   return {
     id: item.id.toString(),
     name: item.title,

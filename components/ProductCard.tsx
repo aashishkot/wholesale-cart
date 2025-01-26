@@ -7,14 +7,7 @@ import { useCart } from "./CartProvider";
 import { useWishlist } from "./WishlistProvider";
 import { Product } from "@/app/services/api";
 
-interface ProductCardProps extends Product {}
-
-export default function ProductCard({
-  id,
-  name,
-  price,
-  image,
-}: ProductCardProps) {
+export default function ProductCard({ id, name, price, image }: Product) {
   const { addToCart } = useCart();
   const { addToWishlist, wishlistItems } = useWishlist();
 

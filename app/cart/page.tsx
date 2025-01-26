@@ -1,33 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
 import { applyOfferCode } from "../services/api";
 
+interface CartItem {
+  id: string;
+  name?: string;
+  price: number;
+  quantity: number;
+}
+
 export default function CartPage() {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
-  const [offerCode, setOfferCode] = useState("");
-  const [discountedTotal, setDiscountedTotal] = useState<number | null>(null);
-  const [isApplying, setIsApplying] = useState(false);
+  const typedCartItems = cartItems as CartItem[];
 
-  const subtotal = cartItems.reduce(
+  const [offerCode, setOfferCode] = useState<string>("");
+  const [discountedTotal, setDiscountedTotal] = useState<number | null>(null);
+  const [isApplying, setIsApplying] = useState<boolean>(false);
+
+  const subtotal = (cartItems as CartItem[]).reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
 
+  // Function to apply the offer code
   const applyOffer = async () => {
     setIsApplying(true);
     try {
       const newTotal = await applyOfferCode(offerCode, subtotal);
-      setDiscountedTotal(newTotal);
+      setDiscountedTotal(newTotal); // Assuming applyOfferCode returns a number
     } catch (error) {
       console.error("Error applying offer code:", error);
     }
     setIsApplying(false);
   };
 
+  // Total is either the discounted total or the subtotal
   const total = discountedTotal !== null ? discountedTotal : subtotal;
+
+  // Handle quantity change in the cart
+  const handleQuantityChange = (
+    id: string,
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    const newQuantity = parseInt(e.target.value, 10);
+    if (!isNaN(newQuantity) && newQuantity >= 1) {
+      updateQuantity(id, newQuantity);
+    }
+  };
 
   return (
     <div className="container mx-auto p-11">
@@ -37,9 +59,9 @@ export default function CartPage() {
       ) : (
         <>
           <ul className="space-y-4 mb-8">
-            {cartItems.map((item) => (
+            {typedCartItems.map((item, index) => (
               <li
-                key={item.id}
+                key={item.id ?? `item-${index}`}
                 className="flex justify-between items-center border-b pb-4"
               >
                 <div>
@@ -53,13 +75,11 @@ export default function CartPage() {
                     type="number"
                     min="1"
                     value={item.quantity}
-                    onChange={(e) =>
-                      updateQuantity(item.id, parseInt(e.target.value))
-                    }
+                    onChange={(e) => handleQuantityChange(item.id ?? "", e)}
                     className="w-16 px-2 py-1 border rounded"
                   />
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => removeFromCart(item.id ?? "")}
                     className="text-red-500 hover:text-red-600"
                   >
                     Remove

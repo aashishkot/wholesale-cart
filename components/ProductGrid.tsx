@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ProductCard from "./ProductCard";
-import { Product } from "../services/api";
+import { Product } from "@/app/services/api";
 
 interface ProductGridProps {
   initialProducts: Product[];

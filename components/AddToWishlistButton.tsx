@@ -1,7 +1,7 @@
 'use client'
 
 import { useWishlist } from './WishlistProvider'
-import { Product } from '../services/api'
+import { Product } from "@/app/services/api";
 
 export default function AddToWishlistButton({ product }: { product: Product }) {
   const { addToWishlist, wishlistItems } = useWishlist()
